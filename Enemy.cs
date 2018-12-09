@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour {
     public int health;
     public string enemyType;
+    public float distanceToPlayer;
 
     UnityEngine.AI.NavMeshAgent agent;
 
@@ -22,28 +23,35 @@ public class Enemy : MonoBehaviour {
 	void Update () {
 		if (isDead)
         {
+            Debug.Log("Enemy Dead.");
             return;
         }
 
         transform.LookAt(player);
-        if(Vector3.Distance(agent.transform.position, player.transform.position) <= 0.5f)
+        agent.SetDestination(player.position);
+        /*distanceToPlayer = Vector3.Distance(player.transform.position, agent.transform.position);
+        if(distanceToPlayer <= 1f)
         {
+            Debug.Log("Stopping.");
             return;
         }
-        else if(Vector3.Distance(agent.transform.position, player.transform.position) > 0.5f)
+        else if(distanceToPlayer > 1f)
         {
-            agent.SetDestination(player.position);
-        }
+            Debug.Log("Chasing player;");
+            
+        }*/
         //Debug.Log(agent.path.status);
 	}
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Not the Droid Collisions you're looking for...");
+
         if (other.gameObject.tag == "hand")
         {
             Destroy(gameObject);
             isDead = true;
-            Debug.Log("Hand colided with Enemy", transform);
+            Debug.Log("Hand collided with Enemy", transform);
         }
     }
 }
