@@ -16,7 +16,11 @@ public class OpenPodDoor : MonoBehaviour {
 	}
 
 	void OnTriggerEnter (Collider other) {
-		m_doorAnimator.SetTrigger ("openPodDoorHal");
-		GetComponent<MeshRenderer> ().material.color = new Color32 (255, 248, 175, 255);
+
+        if(other.gameObject.tag == "hand")
+        {
+            m_doorAnimator.SetTrigger("openPodDoorHal");
+            GetComponent<MeshRenderer>().material.color = new Color32(255, 248, 175, 255);
+        }
 	}
 }

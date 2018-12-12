@@ -6,22 +6,39 @@ using UnityEngine.UI;
 public class GameIntro : MonoBehaviour {
 
     //public Text m_Text;
-    public GameObject[] m_introCanvases;
     //private bool m_IsLerping = false;
-    private bool m_nextScreenCalled = false; 
+    //public GameObject[] m_introCanvases;
+    private bool m_nextScreenCalled = false;
+
+    public GameObject screenOne;
+    public GameObject screenTwo;
+    public GameObject screenThree;
+    public Vector3 m_screenSpawnPosition;
+    private GameObject firstScreen;
+    private GameObject secondScreen;
+    private GameObject thirdScreen;
+
+    public GameObject[] m_Screens;
+
+    private GameObject m_InstancedScreen;
+    private int m_ScreenIndex; //what screen are we currently at
 
 	// Use this for initialization
 	void Start () {
-        m_introCanvases = GameObject.FindGameObjectsWithTag("IntroCanvas");
-	}
+        m_ScreenIndex = 0;
+        //m_introCanvases = GameObject.FindGameObjectsWithTag("IntroCanvas");
+        /*m_introCanvases[0] = GameObject.Find("IntroCanvas1");
+        m_introCanvases[1] = GameObject.Find("IntroCanvas2");
+        m_introCanvases[2] = GameObject.Find("IntroCanvas3");*/
+        m_InstancedScreen = Instantiate(m_Screens[m_ScreenIndex], m_screenSpawnPosition, Quaternion.Euler(new Vector3(0, 180, 0)));
+    }
 	
 	// Update is called once per frame
 	void Update ()
     {
         if (Input.GetKeyDown(KeyCode.Semicolon))
         {
-            //m_IsLerping = true;
-            m_nextScreenCalled = true;
+            GotoNextScreen();
         }
 
 		/*if (m_IsLerping == true)
@@ -38,17 +55,57 @@ public class GameIntro : MonoBehaviour {
                 m_IsLerping = false;
             }
         }*/
-
-        if(m_nextScreenCalled == true)
-        {
-
-        }
-
 	}
 
     public void OnTriggerEnter(Collider other)
     {
+        if (other.tag == "hand")
+        {
+            GotoNextScreen();
+        }
+
+
+        /*
         //m_IsLerping = true;
         m_nextScreenCalled = true;
+        if(screenOne.activeSelf)
+        {
+            //GoSecondScreen();
+            secondScreen = Instantiate(screenTwo, m_screenSpawnPosition, Quaternion.Euler(new Vector3(0, 180, 0)));
+            m_nextScreenCalled = false;
+            Destroy(firstScreen);
+        }*/
     }
+
+    private void GotoNextScreen()
+    {
+        m_ScreenIndex++;
+
+        if (m_ScreenIndex >= m_Screens.Length)
+        {
+            return;
+        }
+
+        if (m_InstancedScreen != null)
+        {
+            Destroy(m_InstancedScreen);
+            m_InstancedScreen = null;
+        }
+
+        m_InstancedScreen = Instantiate(m_Screens[m_ScreenIndex], m_screenSpawnPosition, Quaternion.Euler(new Vector3(0, 180, 0)));
+    }
+
+    /*public void GoSecondScreen()
+    {
+        secondScreen = Instantiate(screenTwo, m_screenSpawnPosition, Quaternion.Euler(new Vector3(0, 180, 0)));
+        m_nextScreenCalled = false;
+        Destroy(firstScreen);
+    }
+
+    public void GoThirdScreen()
+    {
+        thirdScreen = Instantiate(screenThree, m_screenSpawnPosition, Quaternion.Euler(new Vector3(0, 180, 0)));
+        m_nextScreenCalled = false;
+        Destroy(secondScreen);
+    }*/
 }
